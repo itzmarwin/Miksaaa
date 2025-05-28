@@ -77,6 +77,7 @@ autoclean = []
 confirmer = {}
 
 START_VID_URL = getenv('START_VID_URL',None)
+STATS_VID_URL = getenv('STATS_VID_URL', None)
 
 START_IMG_URL = getenv(
     "START_IMG_URL", "https://telegra.ph/file/1cdf4e9c3167a9146f2fc-45311d3a1ee7090b27.jpg"
