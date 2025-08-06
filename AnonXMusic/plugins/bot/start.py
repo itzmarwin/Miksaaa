@@ -144,28 +144,28 @@ async def start_gp(client, message: Message, _):
 async def welcome(client, message: Message):
     for member in message.new_chat_members:
         try:
-            language = await get_lang(message.chat.id)
-            _ = get_string(language)
+            language = await get_lang(message.chat.id)
+            _ = get_string(language)
 
-            if await is_banned_user(member.id):
-                try:
-                    await message.chat.ban_member(member.id)
-                except:
-                    pass
+            if await is_banned_user(member.id):
+                try:
+                    await message.chat.ban_member(member.id)
+                except:
+                    pass
 
-            # Bot joined
-            if member.id == app.id:
-                adder = message.from_user
-                group_name = message.chat.title
-                group_id = message.chat.id
-                group_username = (
-                    f"https://t.me/{message.chat.username}"
-                    if message.chat.username
-                    else "No Username"
-                )
+            # Bot joined
+            if member.id == app.id:
+                adder = message.from_user
+                group_name = message.chat.title
+                group_id = message.chat.id
+                group_username = (
+                    f"https://t.me/{message.chat.username}"
+                    if message.chat.username
+                    else "No Username"
+                )
 
-                # ✅ Send logger message
-                log_text = f"""🆕 <b>Bot Added to a Group!</b>
+                # ✅ Send logger message
+                log_text = f"""🆕 <b>Bot Added to a Group!</b>
 
 <b>👥 Group Name:</b> {group_name}
 <b>🆔 Group ID:</b> <code>{group_id}</code>
@@ -175,45 +175,42 @@ async def welcome(client, message: Message):
 <b>🆔 User ID:</b> <code>{adder.id}</code>
 <b>🔗 Username:</b> @{adder.username if adder.username else "No Username"}
 """
-                await app.send_message(
-                    chat_id=config.LOGGER_ID,
-                    text=log_text,
-                    disable_web_page_preview=True,
-                )
+                await app.send_message(
+                    chat_id=config.LOGGER_ID,
+                    text=log_text,
+                    disable_web_page_preview=True,
+                )
 
-                # Check if private group or blacklisted
-                if message.chat.type != ChatType.SUPERGROUP:
-                    await message.reply_text(_["start_4"])
-                    return await app.leave_chat(message.chat.id)
+                # Check if private group or blacklisted
+                if message.chat.type != ChatType.SUPERGROUP:
+                    await message.reply_text(_["start_4"])
+                    return await app.leave_chat(message.chat.id)
 
-                if message.chat.id in await blacklisted_chats():
-                    await message.reply_text(
-                        _["start_5"].format(
-                            app.mention,
-                            f"https://t.me/{app.username}?start=sudolist",
-                            config.SUPPORT_CHAT,
-                        ),
-                        disable_web_page_preview=True,
-                    )
-                    return await app.leave_chat(message.chat.id)
+                if message.chat.id in await blacklisted_chats():
+                    await message.reply_text(
+                        _["start_5"].format(
+                            app.mention,
+                            f"https://t.me/{app.username}?start=sudolist",
+                            config.SUPPORT_CHAT,
+                        ),
+                        disable_web_page_preview=True,
+                    )
+                    return await app.leave_chat(message.chat.id)
 
-                out = start_panel(_)
-                await message.reply_photo(
-                    photo=config.START_IMG_URL,
-                    caption=_["start_3"].format(
-                        message.from_user.first_name,
-                        app.mention,
-                        message.chat.title,
-                        app.mention,
-                    ),
-                    reply_markup=InlineKeyboardMarkup(out),
-                )
-                await add_served_chat(message.chat.id)
-                await message.stop_propagation()
+                out = start_panel(_)
+                await message.reply_photo(
+                    photo=config.START_IMG_URL,
+                    caption=_["start_3"].format(
+                        message.from_user.first_name,
+                        app.mention,
+                        message.chat.title,
+                        app.mention,
+                    ),
+                    reply_markup=InlineKeyboardMarkup(out),
+                )
 
-        except Exception as ex:
-            print(ex)
+                await add_served_chat(message.chat.id)
+                await message.stop_propagation()
 
-
-
-
+        except Exception as ex:
+            print(ex)
