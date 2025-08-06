@@ -141,6 +141,31 @@ async def start_gp(client, message: Message, _):
     return await add_served_chat(message.chat.id)
 
 @app.on_message(filters.new_chat_members, group=-1)
+if member.id == app.id:
+    # Bot ko kisne add kiya
+    adder = message.from_user
+    group_name = message.chat.title
+    group_id = message.chat.id
+    group_username = f"https://t.me/{message.chat.username}" if message.chat.username else "No Username"
+
+    log_text = f"""🆕 Bot Added to a Group!
+
+<b>👥 Group Name:</b> {group_name}
+<b>🆔 Group ID:</b> <code>{group_id}</code>
+<b>🔗 Group Username:</b> {group_username}
+
+<b>👤 Added By:</b> {adder.mention}
+<b>🆔 User ID:</b> <code>{adder.id}</code>
+<b>🔗 Username:</b> @{adder.username if adder.username else "No Username"}
+"""
+
+    # Send to logger group
+    await app.send_message(
+        chat_id=config.LOGGER_ID,
+        text=log_text,
+        disable_web_page_preview=True,
+    )
+    
 async def welcome(client, message: Message):
     for member in message.new_chat_members:
         try:
@@ -181,3 +206,4 @@ async def welcome(client, message: Message):
                 await message.stop_propagation()
         except Exception as ex:
             print(ex)
+
